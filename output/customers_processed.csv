@@ -1,0 +1,101 @@
+﻿customer_id,customer_name,customer_name_clean,province,amount,amount_with_rate,customer_segment,note
+1,DƯƠNG THỊ AN,Dương Thị An,Hải Phòng,492986.0,542284.6,BASIC,ưu đãi cuối năm
+2,   ĐỖ HOÀI AN,Đỗ Hoài An,Huế,38361172.0,42197289.2,VIP,giao hàng nhanh
+3,lê thu long,Lê Thu Long,Hồ Chí Minh,6175376.0,6792913.6,STANDARD,giao hàng nhanh
+4, DƯƠNG HOÀI MAI,Dương Hoài Mai,Huế,6803481.0,7483829.1,STANDARD,mua nhiều lần
+5,vũ ngọc HẠNH,Vũ Ngọc Hạnh,Khánh Hòa,5264486.0,5790934.6,STANDARD,ưu đãi cuối năm
+6,   DƯƠNG NGỌC BÌNH,Dương Ngọc Bình,Bình Dương,6318800.0,6950680.0,STANDARD,mua nhiều lần
+7,  hoàng minh hiếu,Hoàng Minh Hiếu,Đà Nẵng,,,BASIC,mua nhiều lần
+8,    dương quốc yến,Dương Quốc Yến,Khánh Hòa,8718601.0,9590461.1,STANDARD,giao hàng nhanh
+9,dương ngọc dũng   ,Dương Ngọc Dũng,Cần Thơ,3892638.0,4281901.8,STANDARD,ưu đãi cuối năm
+10,  lê ngọc hải ,Lê Ngọc Hải,Bình Dương,15748105.0,17322915.5,VIP,khách mới
+11,Đỗ Minh Hà,Đỗ Minh Hà,Cần Thơ,23499019.0,25848920.9,VIP,đại lý cấp 1
+12, Dương Gia Mai,Dương Gia Mai,Hà Nội,397766.0,437542.6,BASIC,ưu đãi cuối năm
+13,trần văn long,Trần Văn Long,Bình Dương,5038408.0,5542248.8,STANDARD,đại lý cấp 1
+14,    Phạm Thị Dũng,Phạm Thị Dũng,Hồ Chí Minh,5846276.0,6430903.6,STANDARD,ưu đãi cuối năm
+15,Phạm  Thu Tuấn   ,Phạm Thu Tuấn,Hà Nội,7534780.0,8288258.0,STANDARD,khách mới
+16, Phạm Minh Phúc,Phạm Minh Phúc,Cần Thơ,40535094.0,44588603.4,VIP,đại lý cấp 1
+17,Lý Anh Tuấn,Lý Anh Tuấn,Bình Dương,2550218.0,2805239.8,BASIC,mua nhiều lần
+18,    NGUYỄN ĐỨC CƯỜNG   ,Nguyễn Đức Cường,Quảng Ninh,2857222.0,3142944.2,BASIC,cần chăm sóc
+19, HOÀNG THU LONG   ,Hoàng Thu Long,Khánh Hòa,14916443.0,16408087.3,VIP,ưu đãi cuối năm
+20,,,Hà Nội,45496609.0,50046269.9,VIP,giao hàng nhanh
+21,   DƯƠNG THỊ hà  ,Dương Thị Hà,Khánh Hòa,5214457.0,5735902.7,STANDARD,
+22,  Hoàng Văn Cường  ,Hoàng Văn Cường,Hồ Chí Minh,3081115.0,3389226.5,STANDARD,khách mới
+23,  lý minh tuấn ,Lý Minh Tuấn,Hồ Chí Minh,1146603.0,1261263.3,BASIC,cần chăm sóc
+24,ĐỖ  QUỐC YẾN  ,Đỗ Quốc Yến,Nghệ An,5786573.0,6365230.3,STANDARD,ưu đãi cuối năm
+25,Hoàng Minh Dũng  ,Hoàng Minh Dũng,Hà Nội,24960146.0,27456160.6,VIP,ưu đãi cuối năm
+26,    đặng ngọc lan ,Đặng Ngọc Lan,Quảng Ninh,21983483.0,24181831.3,VIP,giao hàng nhanh
+27,Nguyễn  Thị Yến   ,Nguyễn Thị Yến,Hà Nội,1928957.0,2121852.7,BASIC,ưu đãi cuối năm
+28,vũ quốc CƯỜNG,Vũ Quốc Cường,Khánh Hòa,1340067.0,1474073.7,BASIC,mua nhiều lần
+29,  PHẠM QUỐC NAM   ,Phạm Quốc Nam,Bình Dương,1952984.0,2148282.4,BASIC,ưu đãi cuối năm
+30, đỗ thanh hải,Đỗ Thanh Hải,Hà Nội,202447.0,222691.7,BASIC,ưu đãi cuối năm
+31,Bùi  Hoài Cường ,Bùi Hoài Cường,Hồ Chí Minh,9299546.0,10229500.6,STANDARD,đại lý cấp 1
+32,  Phạm Minh Trang,Phạm Minh Trang,Bình Dương,9335496.0,10269045.6,STANDARD,đại lý cấp 1
+33,   Đỗ Thanh Hải ,Đỗ Thanh Hải,Hải Phòng,1298430.0,1428273.0,BASIC,giao hàng nhanh
+34,vũ ngọc tuấn  ,Vũ Ngọc Tuấn,Hải Phòng,3522322.0,3874554.2,STANDARD,đại lý cấp 1
+35,  Đặng Hoài An,Đặng Hoài An,Bình Dương,24800101.0,27280111.1,VIP,ưu đãi cuối năm
+36,hoàng quốc sơn,Hoàng Quốc Sơn,Hà Nội,45844430.0,50428873.0,VIP,đại lý cấp 1
+37,  ngô hoài an  ,Ngô Hoài An,Cần Thơ,35442729.0,38987001.9,VIP,đại lý cấp 1
+38, hoàng thị sơn,Hoàng Thị Sơn,Hải Phòng,26594901.0,29254391.1,VIP,khách quen
+39,   NGÔ MINH HIẾU,Ngô Minh Hiếu,Hồ Chí Minh,9274055.0,10201460.5,STANDARD,mua nhiều lần
+40,   hoàng thị vy   ,Hoàng Thị Vy,Cần Thơ,3854810.0,4240291.0,STANDARD,khách mới
+41,   Ngô Văn Mai,Ngô Văn Mai,Đà Nẵng,40852585.0,44937843.5,VIP,đại lý cấp 1
+42,   lê anh trang,Lê Anh Trang,Cần Thơ,,,BASIC,
+43,  Phạm Thanh Vy,Phạm Thanh Vy,Khánh Hòa,28540070.0,31394077.0,VIP,khách quen
+44,ĐỖ THU CƯỜNG,Đỗ Thu Cường,Cần Thơ,16244704.0,17869174.4,VIP,ưu đãi cuối năm
+45,   đặng anh hiếu,Đặng Anh Hiếu,Cần Thơ,5572140.0,6129354.0,STANDARD,ưu đãi cuối năm
+46, TRẦN anh hạnh,Trần Anh Hạnh,Khánh Hòa,9377086.0,10314794.6,STANDARD,giao hàng nhanh
+47, TRẦN THU LINH,Trần Thu Linh,Bình Dương,4059309.0,4465239.9,STANDARD,khách mới
+48,  Nguyễn Hoài Linh ,Nguyễn Hoài Linh,Hà Nội,2740086.0,3014094.6,BASIC,mua nhiều lần
+49,lê hoài linh,Lê Hoài Linh,Bình Dương,6779189.0,7457107.9,STANDARD,giao hàng nhanh
+50,  ngô quốc linh ,Ngô Quốc Linh,Đà Nẵng,414844.0,456328.4,BASIC,khách quen
+51,Đặng Thanh Yến   ,Đặng Thanh Yến,Quảng Ninh,2721683.0,2993851.3,BASIC,ưu đãi cuối năm
+52, ĐẶNG THỊ TUẤN,Đặng Thị Tuấn,Bình Dương,29368328.0,32305160.8,VIP,khách mới
+53, Bùi Anh Linh,Bùi Anh Linh,Hồ Chí Minh,3216970.0,3538667.0,STANDARD,ưu đãi cuối năm
+54, dương hoài vy   ,Dương Hoài Vy,Nghệ An,2555050.0,2810555.0,BASIC,
+55,   Trần Thanh Mai   ,Trần Thanh Mai,Hà Nội,46916358.0,51607993.8,VIP,
+56,TRẦN ngọc lan   ,Trần Ngọc Lan,Huế,2274492.0,2501941.2,BASIC,
+57,DƯƠNG THANH BÌNH ,Dương Thanh Bình,Đà Nẵng,5007372.0,5508109.2,STANDARD,giao hàng nhanh
+58,  Đỗ Văn Tuấn,Đỗ Văn Tuấn,Khánh Hòa,29586497.0,32545146.7,VIP,giao hàng nhanh
+59,ĐẶNG  THANH SƠN,Đặng Thanh Sơn,Huế,1840394.0,2024433.4,BASIC,giao hàng nhanh
+60,   Nguyễn Hữu Linh  ,Nguyễn Hữu Linh,Quảng Ninh,26025968.0,28628564.8,VIP,đại lý cấp 1
+61,   phạm quốc bình,Phạm Quốc Bình,Đà Nẵng,255271.0,280798.1,BASIC,cần chăm sóc
+62,Trần Thanh Dũng  ,Trần Thanh Dũng,Hồ Chí Minh,8451224.0,9296346.4,STANDARD,cần chăm sóc
+63,dương đức nam,Dương Đức Nam,Hải Phòng,5410709.0,5951779.9,STANDARD,khách mới
+64, Đặng Thị Dũng  ,Đặng Thị Dũng,Quảng Ninh,1828270.0,2011097.0,BASIC,mua nhiều lần
+65,  Lê Minh Cường,Lê Minh Cường,Bình Dương,9749751.0,10724726.1,STANDARD,giao hàng nhanh
+66,dương đức hải  ,Dương Đức Hải,Bình Dương,1713520.0,1884872.0,BASIC,khách mới
+67,phạm quốc VY,Phạm Quốc Vy,Hà Nội,8752903.0,9628193.3,STANDARD,
+68,HOÀNG THU YẾN,Hoàng Thu Yến,Hà Nội,507535.0,558288.5,BASIC,giao hàng nhanh
+69,bùi VĂN VY ,Bùi Văn Vy,Khánh Hòa,34552283.0,38007511.3,VIP,giao hàng nhanh
+70,lê hữu SƠN ,Lê Hữu Sơn,Khánh Hòa,6333729.0,6967101.9,STANDARD,cần chăm sóc
+71,trần quốc an,Trần Quốc An,Hải Phòng,17270983.0,18998081.3,VIP,
+72,nguyễn HOÀI TUẤN,Nguyễn Hoài Tuấn,Hà Nội,4172534.0,4589787.4,STANDARD,khách quen
+73,   hoàng thanh dũng,Hoàng Thanh Dũng,Đà Nẵng,9095155.0,10004670.5,STANDARD,đại lý cấp 1
+74,  Dương Thị Sơn,Dương Thị Sơn,Khánh Hòa,1640714.0,1804785.4,BASIC,cần chăm sóc
+75, NGUYỄN QUỐC LAN,Nguyễn Quốc Lan,Hải Phòng,1498838.0,1648721.8,BASIC,mua nhiều lần
+76,NGÔ THU CƯỜNG,Ngô Thu Cường,Đà Nẵng,706865.0,777551.5,BASIC,giao hàng nhanh
+77, LÊ THỊ AN ,Lê Thị An,Hồ Chí Minh,9255093.0,10180602.3,STANDARD,
+78,bùi ngọc trang,Bùi Ngọc Trang,Hà Nội,2798366.0,3078202.6,BASIC,khách quen
+79,   bùi quốc phúc ,Bùi Quốc Phúc,Huế,7599947.0,8359941.7,STANDARD,đại lý cấp 1
+80,   Ngô Đức Linh,Ngô Đức Linh,Nghệ An,4803744.0,5284118.4,STANDARD,
+81,  Phạm Quốc Long ,Phạm Quốc Long,Hồ Chí Minh,3765248.0,4141772.8,STANDARD,khách mới
+82, ĐẶNG THỊ MAI   ,Đặng Thị Mai,Hà Nội,9048695.0,9953564.5,STANDARD,giao hàng nhanh
+83, ngô hữu mai   ,Ngô Hữu Mai,Hải Phòng,48527199.0,53379918.9,VIP,đại lý cấp 1
+84,  đỗ hoài yến,Đỗ Hoài Yến,Đà Nẵng,125609.0,138169.9,BASIC,mua nhiều lần
+85,ngô gia nam  ,Ngô Gia Nam,Huế,1407101.0,1547811.1,BASIC,khách mới
+86,  nguyễn minh hải ,Nguyễn Minh Hải,Hồ Chí Minh,1903188.0,2093506.8,BASIC,giao hàng nhanh
+87,Dương Gia Vy ,Dương Gia Vy,Cần Thơ,675604.0,743164.4,BASIC,giao hàng nhanh
+88,Vũ Thị An,Vũ Thị An,Nghệ An,14836904.0,16320594.4,VIP,khách quen
+89,đặng văn quân ,Đặng Văn Quân,Quảng Ninh,21534213.0,23687634.3,VIP,
+90,Lý Ngọc Cường  ,Lý Ngọc Cường,Hồ Chí Minh,805199.0,885718.9,BASIC,khách mới
+91,  đỗ đức hạnh ,Đỗ Đức Hạnh,Hồ Chí Minh,2849404.0,3134344.4,BASIC,mua nhiều lần
+92,Dương Thanh Quân   ,Dương Thanh Quân,Bình Dương,6933595.0,7626954.5,STANDARD,giao hàng nhanh
+93,  hoàng hoài bình ,Hoàng Hoài Bình,Quảng Ninh,6881506.0,7569656.6,STANDARD,khách quen
+94,   bùi hoài hạnh,Bùi Hoài Hạnh,Hải Phòng,3328347.0,3661181.7,STANDARD,
+95,BÙI  ĐỨC TRANG,Bùi Đức Trang,Hồ Chí Minh,5807242.0,6387966.2,STANDARD,cần chăm sóc
+96,TRẦN đức nam ,Trần Đức Nam,Cần Thơ,1567254.0,1723979.4,BASIC,đại lý cấp 1
+97,   lê hoài cường,Lê Hoài Cường,Hồ Chí Minh,7415707.0,8157277.7,STANDARD,đại lý cấp 1
+98,đỗ  ngọc an ,Đỗ Ngọc An,Khánh Hòa,524215.0,576636.5,BASIC,khách quen
+99,DƯƠNG NGỌC YẾN,Dương Ngọc Yến,Nghệ An,3366518.0,3703169.8,STANDARD,cần chăm sóc
+100, Dương Anh Hiếu  ,Dương Anh Hiếu,Bình Dương,2492512.0,2741763.2,BASIC,

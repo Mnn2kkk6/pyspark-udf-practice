@@ -1,0 +1,10 @@
+﻿customer_id,tag
+1,etl
+1,python
+1,spark
+2,airflow
+2,sql
+3,etl
+3,ml
+3,pandas
+3,python
