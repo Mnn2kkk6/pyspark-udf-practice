@@ -1,0 +1,231 @@
+performance_practice.py - console log đầy đủ A-E
+Lệnh      : python performance_practice.py   (SCALE=1, kích thước dữ liệu gốc)
+Môi trường: sandbox 1 CPU, 4GB RAM, Spark 4.2.0, pandas 2.3.3, pyarrow 25.0.1, Python 3.12.3
+Lưu ý     : thời gian chỉ có giá trị so sánh tương đối và có nhiễu. Máy 1 CPU nên không có song song:
+            phần skew (E) không phản ánh đúng hành vi trên cluster thật. Chạy lại trên máy bạn để có số riêng.
+----------------------------------------------------------------------
+WARNING: Using incubator modules: jdk.incubator.vector
+Setting default log level to "WARN".
+
+======================================================================
+A. explain() - BatchEvalPython / ArrowEvalPython / Project
+======================================================================
+--- Built-in ---
+== Physical Plan ==
+*(1) Project [id#0L, amount#1, (amount#1 * 1.1) AS r#2]
++- *(1) Project [id#0L, (cast(id#0L as double) * 1000.0) AS amount#1]
+   +- *(1) Range (0, 10, step=1, splits=4)
+
+--- Python UDF useArrow=False (pickle) ---
+== Physical Plan ==
+*(2) Project [id#0L, amount#1, pythonUDF0#5 AS r#4]
++- BatchEvalPython [py_udf(amount#1)#3], [pythonUDF0#5]
+   +- *(1) Project [id#0L, (cast(id#0L as double) * 1000.0) AS amount#1]
+      +- *(1) Range (0, 10, step=1, splits=4)
+
+--- Python UDF + useArrow=True ---
+== Physical Plan ==
+*(2) Project [id#0L, amount#1, pythonUDF0#8 AS r#7]
++- ArrowEvalPython [py_udf_arrow(amount#1)#6], [pythonUDF0#8], 101
+   +- *(1) Project [id#0L, (cast(id#0L as double) * 1000.0) AS amount#1]
+      +- *(1) Range (0, 10, step=1, splits=4)
+
+--- Pandas UDF ---
+== Physical Plan ==
+*(2) Project [id#0L, amount#1, pythonUDF0#11 AS r#10]
++- ArrowEvalPython [pd_udf(amount#1)#9], [pythonUDF0#11], 200
+   +- *(1) Project [id#0L, (cast(id#0L as double) * 1000.0) AS amount#1]
+      +- *(1) Range (0, 10, step=1, splits=4)
+
+Cách đọc:
+  * Chỉ có 'Project'            -> chạy hoàn toàn trong JVM (codegen)
+  * 'BatchEvalPython'           -> Python UDF kiểu pickle (useArrow=False; mặc định ở Spark <= 3.5)
+  * 'ArrowEvalPython'           -> Pandas UDF, hoặc Python UDF useArrow=True (mặc định ở Spark 4.x)
+  Ngoài ra UDF luôn là 'hộp đen': Catalyst không đẩy filter xuống, không gộp biểu thức.
+
+======================================================================
+B. Benchmark: chi phí chuyển dữ liệu JVM <-> Python
+======================================================================
+
+N = 1,000,000
+  Built-in                              :   0.30s
+
+  Python UDF (pickle)                   :   5.24s
+
+  Python UDF (useArrow=True)            :   2.65s
+  Pandas UDF (Arrow, vectorized)        :   0.77s
+  => Python UDF chậm hơn built-in ~17x, Pandas UDF ~3x
+
+N = 5,000,000
+  Built-in                              :   0.23s
+
+  Python UDF (pickle)                   :   8.02s
+
+  Python UDF (useArrow=True)            :   2.87s
+
+  Pandas UDF (Arrow, vectorized)        :   1.71s
+  => Python UDF chậm hơn built-in ~35x, Pandas UDF ~8x
+
+--- Ảnh hưởng của spark.sql.execution.arrow.maxRecordsPerBatch (Pandas UDF, 5M dòng ở SCALE=1) ---
+
+  maxRecordsPerBatch = 100              :  15.69s
+
+  maxRecordsPerBatch = 1,000            :   2.78s
+
+  maxRecordsPerBatch = 10,000           :   1.44s
+
+  maxRecordsPerBatch = 100,000          :   1.32s
+Batch quá nhỏ -> overhead mỗi batch (gọi hàm Python, tạo Arrow record batch) lớn.
+Batch quá lớn -> tốn RAM của Python worker. Mặc định 10.000 là điểm cân bằng thường dùng.
+
+======================================================================
+C. Shuffle - Exchange trong plan
+======================================================================
+--- 1) UDF row-level (select/withColumn): KHÔNG shuffle ---
+== Physical Plan ==
+*(2) Project [id#164L, customer_id#165, amount#166, pythonUDF0#172 AS r#171]
++- BatchEvalPython [py_udf(amount#166)#170], [pythonUDF0#172]
+   +- *(1) Project [id#164L, cast((id#164L % 1000) as int) AS customer_id#165, cast((id#164L % 997) as double) AS amount#166]
+      +- *(1) Range (0, 2000000, step=1, splits=4)
+
+--- 2) groupBy: có Exchange hashpartitioning (shuffle) ---
+== Physical Plan ==
+*(2) HashAggregate(keys=[customer_id#165], functions=[sum(amount#166)])
++- Exchange hashpartitioning(customer_id#165, 8), ENSURE_REQUIREMENTS, [plan_id=631]
+   +- *(1) HashAggregate(keys=[customer_id#165], functions=[partial_sum(amount#166)])
+      +- *(1) Project [cast((id#164L % 1000) as int) AS customer_id#165, cast((id#164L % 997) as double) AS amount#166]
+         +- *(1) Range (0, 2000000, step=1, splits=4)
+
+--- 3) Join mặc định (sort-merge): shuffle CẢ HAI bảng ---
+== Physical Plan ==
+*(5) Project [customer_id#165, id#164L, amount#166, name#169]
++- *(5) SortMergeJoin [customer_id#165], [customer_id#168], Inner
+   :- *(2) Sort [customer_id#165 ASC NULLS FIRST], false, 0
+   :  +- Exchange hashpartitioning(customer_id#165, 8), ENSURE_REQUIREMENTS, [plan_id=678]
+   :     +- *(1) Project [id#164L, cast((id#164L % 1000) as int) AS customer_id#165, cast((id#164L % 997) as double) AS amount#166]
+   :        +- *(1) Filter isnotnull(cast((id#164L % 1000) as int))
+   :           +- *(1) Range (0, 2000000, step=1, splits=4)
+   +- *(4) Sort [customer_id#168 ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(customer_id#168, 8), ENSURE_REQUIREMENTS, [plan_id=684]
+         +- *(3) Project [cast(id#167L as int) AS customer_id#168, concat(KH, cast(id#167L as string)) AS name#169]
+            +- *(3) Range (0, 1000, step=1, splits=4)
+
+--- 4) Broadcast join: bảng nhỏ gửi tới mọi executor, bảng lớn KHÔNG shuffle ---
+== Physical Plan ==
+*(2) Project [customer_id#165, id#164L, amount#166, name#169]
++- *(2) BroadcastHashJoin [customer_id#165], [customer_id#168], Inner, BuildRight, false, false
+   :- *(2) Project [id#164L, cast((id#164L % 1000) as int) AS customer_id#165, cast((id#164L % 997) as double) AS amount#166]
+   :  +- *(2) Filter isnotnull(cast((id#164L % 1000) as int))
+   :     +- *(2) Range (0, 2000000, step=1, splits=4)
+   +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=737]
+      +- *(1) Project [cast(id#167L as int) AS customer_id#168, concat(KH, cast(id#167L as string)) AS name#169]
+         +- *(1) Range (0, 1000, step=1, splits=4)
+
+--- 5) Pandas UDF dạng group (applyInPandas) = shuffle + Python ---
+== Physical Plan ==
+FlatMapGroupsInPandas [customer_id#165], top_amount(id#164L, customer_id#165, amount#166)#181, [customer_id#182, amount#183]
++- *(2) Sort [customer_id#165 ASC NULLS FIRST], false, 0
+   +- Exchange hashpartitioning(customer_id#165, 8), ENSURE_REQUIREMENTS, [plan_id=766]
+      +- *(1) Project [customer_id#165, id#164L, customer_id#165, amount#166]
+         +- *(1) Project [id#164L, cast((id#164L % 1000) as int) AS customer_id#165, cast((id#164L % 997) as double) AS amount#166]
+            +- *(1) Range (0, 2000000, step=1, splits=4)
+
+--- 6) Số partition sau shuffle = spark.sql.shuffle.partitions ---
+  shuffle.partitions=2    -> 2 partition ở stage sau
+  shuffle.partitions=8    -> 8 partition ở stage sau
+  shuffle.partitions=200  -> 200 partition ở stage sau
+--- 7) UDF trong filter chặn predicate pushdown (đọc Parquet) ---
+
+Built-in filter:
+== Physical Plan ==
+*(1) Filter (isnotnull(amount#207) AND (amount#207 > 900.0))
++- *(1) ColumnarToRow
+   +- FileScan parquet [id#205L,customer_id#206,amount#207] Batched: true, DataFilters: [isnotnull(amount#207), (amount#207 > 900.0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/home/claude/pyspark-udf-practice/output/orders_demo], PartitionFilters: [], PushedFilters: [IsNotNull(amount), GreaterThan(amount,900.0)], ReadSchema: struct<id:bigint,customer_id:int,amount:double>
+
+UDF filter:
+== Physical Plan ==
+*(1) Project [id#205L, customer_id#206, amount#207]
++- *(1) Filter pythonUDF0#210: boolean
+   +- ArrowEvalPython [gt900(amount#207)#209], [pythonUDF0#210], 101
+      +- FileScan parquet [id#205L,customer_id#206,amount#207] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/home/claude/pyspark-udf-practice/output/orders_demo], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:bigint,customer_id:int,amount:double>
+
+Tìm 'PushedFilters' / 'DataFilters' trong FileScan: built-in có điều kiện amount > 900.0, UDF thì rỗng [] -> Spark đọc toàn bộ file rồi mới đẩy sang Python lọc.
+
+======================================================================
+D. Cache / Persist - tránh chạy lại UDF đắt tiền
+======================================================================
+--- Không cache: mỗi action chạy lại toàn bộ UDF ---
+
+  action 1 (sum)                        :   1.90s
+
+  action 2 (max)                        :   1.99s
+
+  action 3 (min)                        :   1.79s
+--- Có cache (MEMORY_AND_DISK): UDF chỉ chạy ở action đầu ---
+
+  action 1 (sum, tính UDF + ghi cache)  :   3.43s
+  action 2 (max, đọc cache)             :   0.35s
+  action 3 (min, đọc cache)             :   0.32s
+--- Plan khi đã cache: đọc từ InMemoryTableScan; BatchEvalPython chỉ nằm trong InMemoryRelation (đã tính xong, không chạy lại) ---
+== Physical Plan ==
+*(2) HashAggregate(keys=[], functions=[sum(r#214)])
++- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=1191]
+   +- *(1) HashAggregate(keys=[], functions=[partial_sum(r#214)])
+      +- InMemoryTableScan [r#214]
+            +- InMemoryRelation [id#211L, amount#212, r#214], StorageLevel(disk, memory, 1 replicas)
+                  +- *(2) Project [id#211L, amount#212, pythonUDF0#253 AS r#214]
+                     +- BatchEvalPython [py_udf(amount#212)#213], [pythonUDF0#253]
+                        +- *(1) Project [id#211L, cast(((id#211L * 7) % 50000000) as double) AS amount#212]
+                           +- *(1) Range (0, 1000000, step=1, splits=4)
+
+Lưu ý:
+  * cache() = persist(MEMORY_AND_DISK) với DataFrame; là lazy, phải có action mới thực sự cache.
+  * Chỉ cache khi DataFrame được dùng LẠI nhiều lần; cache thừa chỉ tốn RAM.
+  * Luôn unpersist() khi xong. Xem tab Storage trong Spark UI (http://localhost:4040).
+
+======================================================================
+E. Data skew - một key chiếm phần lớn dữ liệu
+======================================================================
+--- Phân bố dòng theo key ---
+
++--------+-------+
+|province|  count|
++--------+-------+
+|     HCM|2400000|
+|      P3|  30000|
+|      P9|  30000|
+|     P10|  30000|
+|     P17|  30000|
++--------+-------+
+only showing top 5 rows
+--- Số dòng mỗi partition SAU shuffle theo key (partition của 'HCM' phình to) ---
+
++---+-------+
+|pid|  count|
++---+-------+
+|  0|  30000|
+|  1|  60000|
+|  2|  60000|
+|  3| 150000|
+|  4|2430000|
+|  5| 120000|
+|  6|  60000|
+|  7|  90000|
++---+-------+
+
+--- Không xử lý skew: applyInPandas gom cả 80% dữ liệu của 'HCM' vào 1 task ---
+
+  applyInPandas theo province           :   5.84s
+--- Cách 1: Salting + 2 tầng (aggregate từng phần rồi gộp). Dùng built-in ---
+  salting 2 tầng                        :   1.19s
+  Kiểm tra salting không đổi kết quả: True
+--- Cách 2: Salting cho cả logic Python (Pandas UDF chạy trên từng mảnh nhỏ) ---
+
+  salt + applyInPandas + gộp            :   6.65s
+  Chỉ dùng được khi phép tính 'gộp được' (sum/count/min/max). Median, distinct count chính xác thì không.
+--- Cách 3: AQE tự xử lý skew join (Spark >= 3.0) ---
+
+  join skewed với AQE bật               :   5.24s
+  AQE tách partition quá lớn thành nhiều phần nhỏ khi join (xem 'AQEShuffleRead ... skewed' trong plan).
+  AQE chỉ lo skew ở JOIN; skew ở groupBy/applyInPandas vẫn phải salting thủ công.
+
